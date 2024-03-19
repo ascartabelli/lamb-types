@@ -1,0 +1,31 @@
+{
+    "author": {
+        "email": "andrea.scartabelli@gmail.com",
+        "name": "Andrea Scartabelli"
+    },
+    "bugs": {
+        "url": "https://github.com/ascartabelli/lamb-types/issues"
+    },
+    "homepage": "https://github.com/ascartabelli/lamb-types#readme",
+    "description": "Type definitions for Lamb",
+    "files": [
+        "index.d.ts"
+    ],
+    "keywords": [
+        "lamb",
+        "types",
+        "typescript",
+        "dts",
+        "typescript-definitions"
+    ],
+    "license": "MIT",
+    "main": "",
+    "name": "lamb-types",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ascartabelli/lamb-types.git"
+    },
+    "types": "index.d.ts",
+    "scripts": {},
+    "version": "0.61.0"
+}
