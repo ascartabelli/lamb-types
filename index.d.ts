@@ -20,6 +20,18 @@ declare module "lamb" {
         ? U
         : never;
 
+    type GetPath<
+        S extends Record<PropertyKey, any>,
+        P extends string,
+        SEP extends string = "."
+    > = P extends keyof S
+        ? S[P]
+        : P extends `${number}`
+        ? S[number] | undefined
+        : P extends `${infer Start}${SEP}${infer Rest}`
+        ? GetPath<S[Start], Rest, SEP>
+        : undefined;
+
     type ListIteratorCallback<
         L extends ArrayLike<any>,
         R,
@@ -722,20 +734,27 @@ declare module "lamb" {
         source: S
     ): Array<K>;
 
-    function getKey<K extends PropertyKey, S extends Record<K, any>>(
-        key: K
-    ): (source: S) => K extends keyof S ? S[K] : undefined;
-
-    function getPath<T, S extends Record<PropertyKey, any>>(
-        path: string,
-        separator?: string
-    ): (source: S) => T | undefined;
-
-    function getPathIn<T, S extends Record<PropertyKey, any>>(
+    function getIn<S extends Record<PropertyKey, any>, K extends string>(
         source: S,
-        path: string,
-        separator?: string
-    ): T | undefined;
+        key: K
+    ): K extends keyof S ? S[K] : undefined;
+
+    function getKey<K extends string>(
+        key: K
+    ): <S extends Record<PropertyKey, any>>(
+        source: S
+    ) => K extends keyof S ? S[K] : undefined;
+
+    function getPath<P extends string, SEP extends string>(
+        path: P,
+        separator?: SEP
+    ): <S extends Record<PropertyKey, any>>(source: S) => GetPath<S, P, SEP>;
+
+    function getPathIn<
+        S extends Record<PropertyKey, any>,
+        P extends string,
+        SEP extends string
+    >(source: S, path: P, separator?: SEP): GetPath<S, P, SEP>;
 
     function hasKeyValue<K extends PropertyKey, T, S extends Record<K, T>>(
         key: K,
@@ -806,6 +825,12 @@ declare module "lamb" {
         [K in keyof S as K extends keyof KM ? KM[K] : K]: S[K];
     };
 
+    function setIn<S extends Record<PropertyKey, any>, T, K extends string>(
+        source: S,
+        key: K,
+        value: T
+    ): S & { [k in K]: T };
+
     function setKey<S extends Record<PropertyKey, any>, T, K extends string>(
         key: K,
         value: T
@@ -824,6 +849,25 @@ declare module "lamb" {
         source: S,
         blacklist: K[]
     ): Omit<S, K>;
+
+    function updateIn<
+        S extends Record<PropertyKey, any>,
+        K extends string,
+        F extends UnaryFunction<S[K]>
+    >(
+        source: S,
+        key: K,
+        updater: F
+    ): K extends keyof S ? S & { [k in K]: ReturnType<F> } : S;
+
+    function updateKey<
+        S extends Record<PropertyKey, any>,
+        K extends string,
+        F extends UnaryFunction<S[K]>
+    >(
+        key: K,
+        updater: F
+    ): (source: S) => K extends keyof S ? S & { [k in K]: ReturnType<F> } : S;
 
     /* ------------------------- *
      * *****    STRING     ***** *
