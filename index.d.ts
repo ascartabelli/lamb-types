@@ -734,6 +734,10 @@ declare module "lamb" {
         source: S
     ): Array<K>;
 
+    function fromPairs<
+        const PairsList extends ReadonlyArray<readonly [PropertyKey, any]>
+    >(pairsList: PairsList): { [K in PairsList[number] as K[0]]: K[1] };
+
     function getIn<S extends Record<PropertyKey, any>, K extends string>(
         source: S,
         key: K
@@ -796,10 +800,13 @@ declare module "lamb" {
         F extends ObjectIteratorCallback<S, U>
     >(fn: F): (source: S) => Record<keyof S, U>;
 
-    function ownPairs<
-        S extends Record<string, any>,
-        K extends keyof S & string
-    >(source: S): Array<[K, S[K]]>;
+    function ownPairs<S extends Record<PropertyKey, any>>(
+        source: S
+    ): {} extends S ? [] : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
+
+    function pairs<S extends Record<PropertyKey, any>>(
+        source: S
+    ): {} extends S ? [] : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
 
     function pick<S extends Record<string, any>, K extends string>(
         whitelist: K[]
