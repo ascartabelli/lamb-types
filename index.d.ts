@@ -802,11 +802,15 @@ declare module "lamb" {
 
     function ownPairs<S extends Record<PropertyKey, any>>(
         source: S
-    ): {} extends S ? [] : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
+    ): S extends Record<PropertyKey, never>
+        ? []
+        : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
 
     function pairs<S extends Record<PropertyKey, any>>(
         source: S
-    ): {} extends S ? [] : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
+    ): S extends Record<PropertyKey, never>
+        ? []
+        : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
 
     function pick<S extends Record<string, any>, K extends string>(
         whitelist: K[]
