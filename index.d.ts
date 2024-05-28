@@ -847,6 +847,15 @@ declare module "lamb" {
         value: T
     ): (source: S) => S & { [k in K]: T };
 
+    function setPath(path: string, separator?: string): (source: any) => any;
+
+    function setPathIn(
+        source: any,
+        path: string,
+        value: any,
+        separator?: string
+    ): any;
+
     function skip<S extends Record<string, any>, K extends string>(
         blacklist: K[]
     ): (source: S) => Omit<S, K>;
@@ -879,6 +888,19 @@ declare module "lamb" {
         key: K,
         updater: F
     ): (source: S) => K extends keyof S ? S & { [k in K]: ReturnType<F> } : S;
+
+    function updatePath(
+        path: string,
+        updater: UnaryFunction<any, any>,
+        separator?: string
+    ): (source: any) => any;
+
+    function updatePathIn(
+        source: any,
+        path: string,
+        updater: UnaryFunction<any, any>,
+        separator?: string
+    ): any;
 
     /* ------------------------- *
      * *****    STRING     ***** *
