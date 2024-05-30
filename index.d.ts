@@ -806,6 +806,10 @@ declare module "lamb" {
         ? []
         : Array<{ [K in keyof S]: [K, S[K]] }[keyof S]>;
 
+    function ownValues<S extends Record<PropertyKey, any>>(
+        source: S
+    ): S extends Record<PropertyKey, never> ? [] : Array<S[keyof S]>;
+
     function pairs<S extends Record<PropertyKey, any>>(
         source: S
     ): S extends Record<PropertyKey, never>
@@ -901,6 +905,10 @@ declare module "lamb" {
         updater: UnaryFunction<any, any>,
         separator?: string
     ): any;
+
+    function values<S extends Record<PropertyKey, any>>(
+        source: S
+    ): S extends Record<PropertyKey, never> ? [] : Array<S[keyof S]>;
 
     /* ------------------------- *
      * *****    STRING     ***** *
