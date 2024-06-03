@@ -607,7 +607,7 @@ declare module "lamb" {
         predicate: P,
         trueFn: (value: T) => TR,
         falseFn: (value: T) => FR
-    ): (value: T) => ReturnType<P> extends true ? TR : FR;
+    ): (value: T) => TR | FR;
 
     function gt(a: Ord, b: Ord): boolean;
 
