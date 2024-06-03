@@ -512,6 +512,19 @@ declare module "lamb" {
 
     function always<T>(value: T): (...args: unknown[]) => T;
 
+    function application<F extends AnyFunction>(
+        fn: F,
+        args: Parameters<F>
+    ): ReturnType<F>;
+
+    function apply<F extends AnyFunction>(
+        fn: F
+    ): (args: Parameters<F>) => ReturnType<F>;
+
+    function applyTo<F extends AnyFunction>(
+        args: any[]
+    ): (fn: F) => typeof args extends Parameters<F> ? ReturnType<F> : never;
+
     function binary<F extends AnyFunction>(
         fn: F
     ): F extends (...args: [infer A, infer B, ...any[]]) => infer R
