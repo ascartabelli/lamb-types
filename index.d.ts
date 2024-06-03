@@ -295,11 +295,10 @@ declare module "lamb" {
         iteratee: ListIteratorCallback<L, R>
     ): (arrayLike: L) => Array<R>;
 
-    function partition<
-        T,
-        L extends ArrayLike<T>,
-        P extends ListIteratorCallback<L, boolean>
-    >(arrayLike: L, predicate: P): [Array<T>, Array<T>];
+    function partition<T>(
+        arrayLike: ArrayLike<T>,
+        predicate: ListIteratorCallback<ArrayLike<T>, boolean>
+    ): [Array<T>, Array<T>];
 
     function partitionWith<
         T,
