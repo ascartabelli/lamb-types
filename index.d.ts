@@ -581,6 +581,8 @@ declare module "lamb" {
         functions: PipeArgs<Fns> extends Fns ? Fns : PipeArgs<Fns>
     ): (...args: Args) => R;
 
+    function throttle<F extends AnyFunction>(fn: F, timespan: number): F;
+
     function unary<T, R>(fn: (a: T, ...args: any[]) => R): UnaryFunction<T, R>;
 
     /* ------------------------- *
