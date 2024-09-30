@@ -306,14 +306,14 @@ declare module "lamb" {
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => [Array<T>, Array<T>];
 
-    function pluck<T, U extends Record<PropertyKey, T>, K extends keyof U>(
+    function pluck<T extends Record<PropertyKey, any>, K extends keyof T>(
         key: K
-    ): (arrayLike: ArrayLike<U>) => Array<T>;
+    ): <U extends ArrayLike<T>>(arrayLike: U) => Array<U[number][K]>;
 
-    function pluckFrom<T, U extends Record<PropertyKey, T>, K extends keyof U>(
-        arrayLike: ArrayLike<U>,
+    function pluckFrom<T extends Record<PropertyKey, any>, K extends keyof T>(
+        arrayLike: ArrayLike<T>,
         key: K
-    ): Array<T>;
+    ): Array<T[K]>;
 
     function pull<T, L extends ArrayLike<T>, V extends ArrayLike<T>>(
         values: V
