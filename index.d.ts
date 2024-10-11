@@ -239,7 +239,7 @@ declare module "lamb" {
         F extends ListIteratorCallback<L, V | undefined>
     >(iteratee: F): (arrayLike: L) => Record<V | "undefined", Array<T>>;
 
-    function head<const L extends ArrayLike<any>>(
+    function head<T, const L extends ArrayLike<T>>(
         arrayLike: L
     ): L["length"] extends 0 ? undefined : L[0];
 
@@ -280,9 +280,14 @@ declare module "lamb" {
         separator: string
     ): <T>(arrayLike: ArrayLike<T>) => string;
 
-    function last<const L extends ArrayLike<any>>(
+    function last<T, const L extends ArrayLike<T>>(
         arrayLike: L
-    ): L["length"] extends 0 ? undefined : L[-1];
+    ): L["length"] extends 0
+        ? undefined
+        : L extends readonly [...any[], infer Last]
+            ? Last
+            : L extends Array<infer T> ? T : T;
+
 
     function list<T>(...values: T[]): Array<T>;
 
@@ -453,7 +458,7 @@ declare module "lamb" {
 
     function tail<T>(arrayLike: ArrayLike<T>): Array<T>;
 
-    function take<T>(amount: number): (arrayLike: ArrayLike<T>) => Array<T>;
+    function take(amount: number): <T>(arrayLike: ArrayLike<T>) => Array<T>;
 
     function takeFrom<T>(arrayLike: ArrayLike<T>, amount: number): Array<T>;
 
@@ -532,9 +537,10 @@ declare module "lamb" {
 
     function collect<
         T,
-        Args extends any[],
-        Fns extends Array<(...args: Args) => T>
-    >(functions: Fns): (...args: Args) => T[];
+        Fns extends Array<(v: T, ...args: any[]) => any>
+    >(functions: [...Fns]): (...args: Parameters<Fns[number]>) => {
+        [K in keyof Fns]: ReturnType<Fns[K]>
+    };
 
     function compose<A, B, C>(
         f: UnaryFunction<B, C>,
