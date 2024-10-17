@@ -896,22 +896,23 @@ declare module "lamb" {
 
     function updateIn<
         S extends Record<PropertyKey, any>,
-        K extends string,
+        K extends keyof S & string,
         F extends UnaryFunction<S[K]>
     >(
         source: S,
         key: K,
         updater: F
-    ): K extends keyof S ? S & { [k in K]: ReturnType<F> } : S;
+    ): K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
 
     function updateKey<
         SS extends Record<PropertyKey, any>,
-        K extends string,
+        K extends keyof SS & string,
         F extends UnaryFunction<SS[K]>
     >(
         key: K,
         updater: F
-    ): <S extends SS>(source: S) => K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
+    ): <S extends SS>(source: S) =>
+        K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
 
     function updatePath(
         path: string,
