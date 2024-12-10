@@ -285,9 +285,10 @@ declare module "lamb" {
     ): L["length"] extends 0
         ? undefined
         : L extends readonly [...any[], infer Last]
-            ? Last
-            : L extends Array<infer T> ? T : T;
-
+        ? Last
+        : L extends Array<infer T>
+        ? T
+        : T;
 
     function list<T>(...values: T[]): Array<T>;
 
@@ -535,11 +536,10 @@ declare module "lamb" {
         ? (a: A, b: B) => R
         : never;
 
-    function collect<
-        T,
-        Fns extends Array<(v: T, ...args: any[]) => any>
-    >(functions: [...Fns]): (...args: Parameters<Fns[number]>) => {
-        [K in keyof Fns]: ReturnType<Fns[K]>
+    function collect<T, Fns extends Array<(v: T, ...args: any[]) => any>>(
+        functions: [...Fns]
+    ): (...args: Parameters<Fns[number]>) => {
+        [K in keyof Fns]: ReturnType<Fns[K]>;
     };
 
     function compose<A, B, C>(
@@ -871,7 +871,11 @@ declare module "lamb" {
         value: T
     ): (source: S) => S & { [k in K]: T };
 
-    function setPath(path: string, separator?: string): (source: any) => any;
+    function setPath(
+        path: string,
+        value: any,
+        separator?: string
+    ): (source: any) => any;
 
     function setPathIn(
         source: any,
@@ -911,8 +915,9 @@ declare module "lamb" {
     >(
         key: K,
         updater: F
-    ): <S extends SS>(source: S) =>
-        K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
+    ): <S extends SS>(
+        source: S
+    ) => K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
 
     function updatePath(
         path: string,
