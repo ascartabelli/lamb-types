@@ -884,12 +884,12 @@ declare module "lamb" {
         separator?: string
     ): any;
 
-    function skip<S extends Record<string, any>, K extends string>(
+    function skip<K extends string>(
         blacklist: K[]
-    ): (source: S) => Omit<S, K>;
+    ): <S extends Record<string, any>>(source: S) => Omit<S, K>;
 
     function skipIf<
-        S extends Record<string, any>,
+        S extends Record<PropertyKey, any>,
         P extends ObjectIteratorCallback<S, boolean>
     >(predicate: P): (source: S) => Partial<S>;
 
@@ -901,23 +901,20 @@ declare module "lamb" {
     function updateIn<
         S extends Record<PropertyKey, any>,
         K extends keyof S & string,
-        F extends UnaryFunction<S[K]>
+        T,
+        F extends UnaryFunction<S[K], T>
     >(
         source: S,
         key: K,
         updater: F
-    ): K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
+    ): T extends S[K] ? S : Omit<S, K> & { [k in K]: T };
 
-    function updateKey<
-        SS extends Record<PropertyKey, any>,
-        K extends keyof SS & string,
-        F extends UnaryFunction<SS[K]>
-    >(
+    function updateKey<K extends string, F extends UnaryFunction>(
         key: K,
         updater: F
-    ): <S extends SS>(
+    ): <T extends ReturnType<F>, S extends Record<PropertyKey, any>>(
         source: S
-    ) => K extends keyof S ? Omit<S, K> & { [k in K]: ReturnType<F> } : S;
+    ) => S[K] extends T ? S : Omit<S, K> & { [k in K]: T };
 
     function updatePath(
         path: string,
