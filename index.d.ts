@@ -44,7 +44,15 @@ declare module "lamb" {
         K extends keyof S & string = any
     > = (value: S[K], key: K, source: S) => R;
 
-    type Ord = Number | number | String | string | Boolean | boolean | Date;
+    type Ord =
+        | bigint
+        | Boolean
+        | boolean
+        | Date
+        | Number
+        | number
+        | String
+        | string;
 
     /** @see https://dev.to/ecyrbe/how-to-use-advanced-typescript-to-define-a-pipe-function-381h  */
     type PipeArgs<
