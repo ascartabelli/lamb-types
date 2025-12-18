@@ -38,6 +38,12 @@ declare module "lamb" {
         I extends keyof L & number = any
     > = (element: L[I], idx: I, list: L) => R;
 
+    type ListIteratorPredicateCallback<T, U extends T> = (
+        element: T,
+        idx: number,
+        list: ArrayLike<T>
+    ) => element is U;
+
     type ObjectIteratorCallback<
         S extends Record<string, any>,
         R,
@@ -144,18 +150,29 @@ declare module "lamb" {
         P extends ListIteratorCallback<L, boolean>
     >(arrayLike: L, predicate: P): boolean;
 
+    function filter<T, U extends T>(
+        arrayLike: ArrayLike<T>,
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): Array<U>;
     function filter<
         T,
         L extends ArrayLike<T>,
         P extends ListIteratorCallback<L, boolean>
     >(arrayLike: L, predicate: P): Array<T>;
 
+    function filterWith<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => Array<U>;
     function filterWith<
         T,
         L extends ArrayLike<T>,
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => Array<T>;
 
+    function find<T, U extends T>(
+        arrayLike: ArrayLike<T>,
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): U | undefined;
     function find<
         T,
         L extends ArrayLike<T>,
@@ -174,6 +191,10 @@ declare module "lamb" {
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => number;
 
+    function findLast<T, U extends T>(
+        arrayLike: ArrayLike<T>,
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): U | undefined;
     function findLast<
         T,
         L extends ArrayLike<T>,
@@ -192,12 +213,18 @@ declare module "lamb" {
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => number;
 
+    function findLastWhere<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => U | undefined;
     function findLastWhere<
         T,
         L extends ArrayLike<T>,
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => T | undefined;
 
+    function findWhere<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => U | undefined;
     function findWhere<
         T,
         L extends ArrayLike<T>,
@@ -309,11 +336,18 @@ declare module "lamb" {
         iteratee: ListIteratorCallback<L, R>
     ): (arrayLike: L) => Array<R>;
 
+    function partition<T, U extends T>(
+        arrayLike: ArrayLike<T>,
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): [Array<U>, Array<Exclude<T, U>>];
     function partition<T>(
         arrayLike: ArrayLike<T>,
         predicate: ListIteratorCallback<ArrayLike<T>, boolean>
     ): [Array<T>, Array<T>];
 
+    function partitionWith<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => [Array<U>, Array<Exclude<T, U>>];
     function partitionWith<
         T,
         L extends ArrayLike<T>,
@@ -471,12 +505,18 @@ declare module "lamb" {
 
     function takeFrom<T>(arrayLike: ArrayLike<T>, amount: number): Array<T>;
 
+    function takeLastWhile<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => Array<U>;
     function takeLastWhile<
         T,
         L extends ArrayLike<T>,
         P extends ListIteratorCallback<L, boolean>
     >(predicate: P): (arrayLike: L) => Array<T>;
 
+    function takeWhile<T, U extends T>(
+        predicate: ListIteratorPredicateCallback<T, U>
+    ): (arrayLike: ArrayLike<T>) => Array<U>;
     function takeWhile<
         T,
         L extends ArrayLike<T>,
