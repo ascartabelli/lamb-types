@@ -27,10 +27,10 @@ declare module "lamb" {
     > = P extends keyof S
         ? S[P]
         : P extends `${number}`
-        ? S[number] | undefined
-        : P extends `${infer Start}${SEP}${infer Rest}`
-        ? GetPath<S[Start], Rest, SEP>
-        : undefined;
+          ? S[number] | undefined
+          : P extends `${infer Start}${SEP}${infer Rest}`
+            ? GetPath<S[Start], Rest, SEP>
+            : undefined;
 
     type ListIteratorCallback<
         L extends ArrayLike<any>,
@@ -67,10 +67,10 @@ declare module "lamb" {
     > = Fns extends [(...args: infer A) => infer B]
         ? [...AccFns, (...args: A) => B]
         : Fns extends [(...args: infer A) => any, ...infer Tail]
-        ? Tail extends [(arg: infer B) => any, ...any[]]
-            ? PipeArgs<Tail, [...AccFns, (...args: A) => B]>
-            : AccFns
-        : AccFns;
+          ? Tail extends [(arg: infer B) => any, ...any[]]
+              ? PipeArgs<Tail, [...AccFns, (...args: A) => B]>
+              : AccFns
+          : AccFns;
 
     type PipeArgsLastReturnType<
         Fns extends AnyFunction[],
@@ -320,10 +320,10 @@ declare module "lamb" {
     ): L["length"] extends 0
         ? undefined
         : L extends readonly [...any[], infer Last]
-        ? Last
-        : L extends Array<infer T>
-        ? T
-        : T;
+          ? Last
+          : L extends Array<infer T>
+            ? T
+            : T;
 
     function list<T>(...values: T[]): Array<T>;
 
@@ -584,9 +584,16 @@ declare module "lamb" {
         ? (a: A, b: B) => R
         : never;
 
-    function collect<T, Fns extends Array<(v: T, ...args: any[]) => any>>(
+    function collect<
+        T,
+        Rest extends any[],
+        Fns extends Array<(v: T, ...args: Rest) => any>
+    >(
         functions: [...Fns]
-    ): (...args: Parameters<Fns[number]>) => {
+    ): (
+        v: T,
+        ...args: Rest
+    ) => {
         [K in keyof Fns]: ReturnType<Fns[K]>;
     };
 
